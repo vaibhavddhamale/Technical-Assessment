@@ -1,0 +1,23 @@
+3. Interrupt-Driven GPIO Handling
+
+a) Compare and contrast polling-based and interrupt-driven GPIO handling:
+● Explain performance implications
+    Polling wastes CPU cycles checking status repeatedly.
+    Interrupts allow CPU to work on other tasks and respond immediately when event occurs.
+● Discuss power consumption differences
+    Polling keeps CPU busy, leading to higher power use.
+    Interrupts let CPU sleep until triggered, saving power.
+● Describe interrupt latency considerations
+    Polling latency depends on polling frequency, may delay response.
+    Interrupts provide quick, predictable response with low latency.
+
+b) Design a state machine for robust interrupt handling that includes:
+State Machine for Robust Interrupt Handling
+
+Edge-triggered: Fires on signal changes (rising/falling edge).
+Level-triggered: Active as long as signal level is asserted.
+Nested Interrupts: Allow higher priority interrupts to preempt lower ones safely.
+Priority Scheme: Set priorities to handle critical interrupts first.
+
+Flow: Idle → Interrupt detected → ISR runs → Process & clear → Resume normal operation.
+
