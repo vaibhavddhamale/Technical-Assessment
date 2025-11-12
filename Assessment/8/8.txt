@@ -1,0 +1,48 @@
+8. API's automation and testing.
+
+1. What is an endpoint APIs and how are they used?, Explain with examples. 
+Answer : An API endpoint is a specific URL where an API can be accessed to perform an action or get data.
+
+Example:
+https://dog.ceo/api/breeds/image/random
+
+Each endpoint handles specific tasks using methods like:
+	•	GET → Fetch data
+	•	POST → Send data
+	•	PUT → Update data
+    •	DELETE → Remove data
+
+2. What are the types of APIs and their delivery formats? Explain with significance and example of each format. 
+Answer: Types of APIs:
+	1.	Open API – Publicly available (e.g., Weather API).
+	2.	Internal API – Used within an organization.
+	3.	Partner API – Shared with specific partners.
+	4.	Composite API – Combines multiple APIs in one call.
+
+Delivery Formats:
+	1.	REST – Uses HTTP (simple, most common) → Example: GitHub API.
+	2.	SOAP – XML-based (secure, standardized) → Example: Banking APIs.
+	3.	GraphQL – Client requests specific data → Example: Facebook API.
+	4.	gRPC – Binary data (fast, for microservices) → Example: Google APIs.
+    5.	WebSocket – Real-time communication → Example: Chat or IoT APIs.
+
+
+3. What are the most commonly used tools to test APIs? How to debug if a API call fails? Explain with examples.
+Answer: Common API Testing Tools:
+	1.	Postman – Send, test, and automate API requests.
+	2.	cURL – Command-line tool for API testing.
+	3.	SoapUI – For SOAP and REST testing.
+	4.	Insomnia – Simple REST and GraphQL testing tool.
+
+How to Debug API Failures:
+	1.	Check Endpoint & Method – Ensure correct URL and HTTP method (GET/POST).
+→ Example: GET https://api.github.com/users
+	2.	Verify Headers & Auth – Missing API key or wrong token can fail calls.
+	3.	Inspect Response Codes:
+	•	400 → Bad Request
+	•	401 → Unauthorized
+	•	404 → Not Found
+	•	500 → Server Error
+	4.	Use Logs/Console Output – Check request and response in Postman or browser console.
+
+Example: If GET /users returns 401, check if the Authorization token is valid.

@@ -1,0 +1,129 @@
+1. 4G Module Integration and Cellular Communication
+
+4G Module (Quectel EC25) Integration Notes
+
+1. Introduction
+
+EC25 is a 4G (LTE Cat-4) communication module.
+
+Used in embedded & IoT devices to provide mobile internet using SIM card.
+
+Communicates via AT Commands over UART / USB interface.
+
+---
+
+2. Hardware Connections
+
+Pin/Interface	Connect To
+
+VBAT / 5V	Proper power supply (stable)
+GND	Ground
+TX / RX	MCU/Processor UART
+SIM Slot	Insert 4G SIM
+Antenna	4G LTE Antenna
+
+---
+
+3. Power ON Sequence
+
+Provide power to module.
+
+Some modules need:
+PWRKEY → LOW for 1 sec → Module turns ON
+
+Wait until module is ready to accept AT commands.
+
+---
+
+4. Basic Initialization Steps
+
+Step	Command	Expected Response
+
+Check module	AT	OK
+Disable echo	ATE0	OK
+Check SIM	AT+CPIN?	READY
+Check signal	AT+CSQ	0-31 (higher is better)
+Network register	AT+CREG?	0,1 or 0,5 (connected)
+
+---
+
+5. Internet Activation (PDP Context)
+
+Example for Airtel SIM (India)
+
+Action	Command
+
+Set APN	AT+CGDCONT=1,"IP","airtelgprs.com"
+Start data	AT+CGACT=1,1
+Get IP	AT+CGPADDR
+If IP received → Internet is active.
+
+---
+
+6. Connection Workflow
+
+Power ON
+  ↓
+AT Communication OK
+  ↓
+SIM Check (AT+CPIN?)
+  ↓
+Signal Test (AT+CSQ)
+  ↓
+Network Registration (AT+CREG?)
+  ↓
+APN Set (AT+CGDCONT)
+  ↓
+Data Activate (AT+CGACT)
+  ↓
+Internet Ready 
+
+---
+
+7. Important AT Commands (EC25)
+
+Command	Purpose
+
+AT	Test module
+ATE0	Turn off echo
+AT+CPIN?	SIM status
+AT+CSQ	Signal strength
+AT+CREG?	Network registration
+AT+CGDCONT	Configure APN
+AT+CGACT	Enable data
+AT+CGPADDR	Get IP address
+
+---
+
+8. Python Sample AT Parser (simple)
+
+import serial, time
+
+ser = serial.Serial("/dev/ttyUSB2", 115200, timeout=1)
+
+def cmd(c):
+    ser.write((c + '\r\n').encode())
+    time.sleep(1)
+    while ser.inWaiting():
+        print(ser.readline().decode().strip())
+
+cmd("AT")
+cmd("ATE0")
+cmd("AT+CPIN?")
+cmd("AT+CSQ")
+cmd("AT+CREG?")
+cmd('AT+CGDCONT=1,"IP","airtelgprs.com"')
+cmd("AT+CGACT=1,1")
+cmd("AT+CGPADDR")
+
+---
+
+9. Success Indicators 
+
+Check	Expected
+
+SIM Ready	AT+CPIN? → READY
+Network	AT+CREG? → 0,1
+Internet	AT+CGPADDR → IP address received
+
+---

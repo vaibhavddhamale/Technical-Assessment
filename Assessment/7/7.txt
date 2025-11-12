@@ -1,0 +1,80 @@
+7. Modbus Protocol Application
+
+● What is Modbus Protocol where is it used? What are it's type?
+
+Modbus is a simple, open communication protocol used to exchange data between controllers, sensors, PLCs, and computers.
+It’s widely used in industrial automation, energy monitoring, and IoT gateways.
+
+Types of Modbus
+Modbus RTU → Serial (RS-485/RS-232), binary format
+Modbus ASCII → Serial, ASCII text format
+Modbus TCP/IP → Ethernet or Wi-Fi, uses TCP port 502
+
+● How to Implement Modbus Protocol in a microcontroller? Raspberry Pi?
+On a Microcontroller
+
+Use UART/RS-485 interface for Modbus RTU.
+
+Configure:
+Baud rate (e.g., 9600 or 115200)
+Slave address
+Function codes (read/write registers)
+Use a Modbus library (e.g., SimpleModbus or libmodbus) to handle CRC and frame parsing.
+
+On a Raspberry Pi
+For Modbus RTU: connect via USB-RS485 converter and use Python library pymodbus.
+For Modbus TCP: connect directly over Ethernet/Wi-Fi.
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+from pymodbus.client import ModbusSerialClient
+client = ModbusSerialClient(port='/dev/ttyUSB0', baudrate=9600)
+client.connect()
+result = client.read_holding_registers(0, 10, unit=1)
+print(result.registers)
+client.close()
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+.  Checking Common Modbus Errors
+
+Common issues:
+Wrong slave address
+Mismatched baud rate / parity
+Incorrect function code
+CRC (checksum) errors
+Timeout / no response
+
+Steps to check communication
+Verify hardware connection (A/B wires, polarity).
+Match baud rate, data bits, parity, and stop bits.
+Test using tools like ModScan or QModMaster.
+Observe Modbus response frames and CRC validity.
+Check device address and function code compatibility.
+
+Workflow: Monitor Holding Registers → Publish to Cloud (MQTT)
+
+Start
+ ↓
+Initialize Modbus & MQTT Connections
+ ↓
+Read Holding Registers from Modbus Slave
+ ↓
+Format Data (JSON)
+ ↓
+Publish Data to MQTT Broker (Cloud)
+ ↓
+Repeat every X seconds
+
+///////////////////////////////////////////////////////////////
+
+data = client.read_holding_registers(0, 3, unit=1)
+payload = {
+    "device_id": "PLC_01",
+    "holding_registers": {
+        "40001": data.registers[0],
+        "40002": data.registers[1],
+        "40003": data.registers[2]
+    }
+}
+mqtt_client.publish("factory/data", json.dumps(payload))

@@ -1,0 +1,20 @@
+5. Time based Scheduling of jobs within Embedded systems
+
+● Explain with examples techniques to schedule tasks within an embedded system
+
+
+Super Loop (Polling Loop)
+The program runs in a continuous loop checking for events or timers.
+Example: read a sensor every 100 ms or blink an LED every second.
+
+Timer Interrupts
+A hardware timer automatically calls an interrupt at regular intervals.
+Example: run a function every 1 ms to keep system time.
+
+RTOS-based Scheduling
+A Real-Time Operating System runs several tasks based on their priority and timing.
+Example: one task sends data while another reads sensors at the same time.
+
+Event-driven (Interrupt-based)
+The system reacts only when an event happens.
+Example: when a button is pressed or new data arrives from a sensor.

@@ -1,0 +1,73 @@
+6. Data Logging and retrieval
+
+Checking Network/Internet Connectivity (4G Modem)
+How to detect connection
+
+Send an AT command to the modem (for example AT+CREG? or AT+CGATT?) to check network registration.
+
+If response = 1,1 → Registered on home network.
+If response = 1,5 → Registered on roaming network.
+
+To confirm internet connectivity, ping a known server or try a TCP/HTTP request.
+
+Simple Workflow
+Start
+ ↓
+Check 4G Modem status (AT+CREG?)
+ ↓
+If registered → test internet (ping server)
+     ↓
+     If success → return TRUE (connected)
+     Else → return FALSE
+Else
+     return FALSE
+
+2️.Local Data Logging During Disconnection
+
+If the device cannot send data to the IoT server, store data locally in SD card or SPI Flash.
+
+Workflow
+Start
+ ↓
+Try publish data to IoT server
+ ↓
+If publish SUCCESS → continue
+If publish FAIL or no internet:
+    → Save data (timestamp + values) to SD card/flash
+
+////////////////////////////////////////////////////////
+
+Example (pseudo code):
+
+if (send_to_server(data) == FAIL) {
+    save_to_sdcard(data, timestamp);
+}
+
+3️. Uploading Logged Data When Back Online
+When device reconnects:
+
+Check SD card/flash for stored records.
+Send each entry to IoT server in order (oldest first).
+On successful upload → delete that entry from local storage.
+
+Workflow
+Device online?
+  ↓
+Yes → read old data from SD card
+       send to server
+       on success → delete
+No → continue storing locally
+
+/////////////////////////////////////////////////////////////////////////////////
+
+Example (pseudo code):
+
+if (network_connected()) {
+    while (has_local_data()) {
+        data = read_from_sdcard();
+        if (send_to_server(data) == SUCCESS)
+            delete_from_sdcard(data);
+        else
+            break; // stop if server fails again
+    }
+}

@@ -1,0 +1,32 @@
+Secure OTA (Over-The-Air) Update System
+Main Features
+
+OTA Support:
+Device downloads new firmware/software from a remote server via Wi-Fi or cellular (HTTPS or MQTT).
+
+Integrity Verification:
+
+Use SHA-256 hash to verify file correctness.
+Check digital signature (RSA/ECDSA) before installing.
+Partial/Failed Update Handling:
+Download firmware in chunks; resume if interrupted.
+If update fails or power loss occurs → system keeps old firmware.
+Rollback Capability:
+Use A/B partitions (one active, one backup).
+If new firmware fails to boot, revert to previous version automatically.
+
+
+Start
+ ↓
+Check for new version on server
+ ↓
+If new version found:
+    Download firmware (in chunks)
+    Verify hash + signature
+    Save to inactive partition
+    Reboot
+ ↓
+Bootloader checks new image
+If OK → confirm and run
+If fail → rollback to old version
+Repeat
